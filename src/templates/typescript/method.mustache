@@ -1,0 +1,29 @@
+
+/**
+* {{&summary}}
+* @method
+{{#externalDocs}}
+* @see {@link {{&url}}|{{#description}}{{&description}}{{/description}}{{^description}}External docs{{/description}}}
+{{/externalDocs}}
+* @name {{&className}}#{{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}
+{{#parameters}}
+  {{#excludeAuthorizationParameter}}
+    {{#required}}
+    {{^isSingleton}} * @param {{=<% %>=}}{<%&type%>}<%={{ }}=%> {{&camelCaseName}} - {{&description}}{{/isSingleton}}
+    {{/required}}
+    {{/excludeAuthorizationParameter}}
+{{/parameters}}
+*/
+{{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}(
+{{#parameters}}{{#excludeAuthorizationParameter}}{{#required}}{{^isSingleton}}{{&camelCaseName}}: {{> type}},
+{{/isSingleton}}{{/required}}{{/excludeAuthorizationParameter}}{{/parameters}}
+): {{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}Parameters {
+  return new {{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}Parameters(this, '{{method}}', '{{&path}}'
+  {{#parameters}}
+    {{#excludeAuthorizationParameter}}
+      {{#required}}
+        , {{&camelCaseName}}
+      {{/required}}
+    {{/excludeAuthorizationParameter}}
+  {{/parameters}}
+  );}
