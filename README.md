@@ -3,9 +3,6 @@
 [![NPM Version](http://img.shields.io/npm/v/ce-sdkifier.svg)]()
 [![NPM Downloads](https://img.shields.io/npm/dt/ce-sdkifier.svg)]()
 
-> Note:  This is currently an internal use only, pre-release version of the tool.  Any feedback
-you can provide will be very helpful and appreciated
-
   A command-line tool for [Cloud Elements](https://cloud-elements.com) to generate SDKs 
   for our Platform and Element APIs.  In the case of Elements, you can choose to generate
   the SDK based on a hub, an element, or an instance.
@@ -32,8 +29,6 @@ cd ce-sdkifier-internal
 npm install
 npm link
 ```
-
-> Note: Installation from github is currently the only supported option during the internal release only period
 
 ## Generating an SDK
 
