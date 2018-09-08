@@ -22,10 +22,10 @@ You must have [Node.js](https://nodejs.org) installed in order to use this tool.
 
     npm install -g ce-sdkifier
 
-You may also install the tool directly from the [github repository](https://github.com/cloud-elements/ce-sdkifier-internal).
+You may also install the tool directly from the [github repository](https://github.com/cloud-elements/ce-sdkifier).
 ```
-git clone https://github.com/cloud-elements/ce-sdkifier-internal.git
-cd ce-sdkifier-internal
+git clone https://github.com/cloud-elements/ce-sdkifier.git
+cd ce-sdkifier
 npm install
 npm link
 ```

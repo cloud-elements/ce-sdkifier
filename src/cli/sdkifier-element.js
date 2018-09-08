@@ -16,7 +16,7 @@ commander
 commander.parse(process.argv);
 
 if (!commander.id && !commander.key) {
-  reportError('You must specify either the element key or id');
+  reportError('You must specify either the element key or id', commander);
 }
 
 if (commander.id && commander.key) {

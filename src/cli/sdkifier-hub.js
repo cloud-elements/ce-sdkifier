@@ -8,14 +8,13 @@ const {reportError, reportSuccess} = require('../core/utils');
 
 commander
   .arguments('<hub-key>')
-  .option('-u, --user [username]', 'specify the username for authentication')
   .option('-b, --baseUrl [base url]', 'specify the base url (defaults to https://api.cloud-elements.com')
   .option('-l, --label [label]', 'provide alternate label for the generated SDK files');
 
 commander.parse(process.argv);
 
 if (commander.args.length === 0) {
-  reportError('hub-key is required');
+  reportError('hub-key is required', commander);
 }
 
 const hub = commander.args[0];

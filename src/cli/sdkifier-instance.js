@@ -15,7 +15,7 @@ commander
 commander.parse(process.argv);
 
 if (commander.args.length === 0) {
-  reportError('id is required');
+  reportError('id is required', commander);
 }
 
 if (!commander.user) {
