@@ -1,9 +1,8 @@
 'use strict';
 
 const commander = require('commander');
-const swaggerer = require('../core/swaggerer');
-const {platformSDK} = require('../core/platformSDK');
 const configurator = require('../core/configurator');
+const {generateInstanceSdk} = require('../core/sdkifier')
 const {reportError, reportSuccess} = require('../core/utils');
 
 commander
@@ -25,19 +24,10 @@ if (!commander.user) {
 const id = commander.args[0];
 
 async function handleInstanceCommand() {
-  let platform;
-  try {
-    platform = new platformSDK(...await configurator(commander));
-    const swagger = await platform.get(`/instances/${id}/docs`);
-    swaggerer(commander.label || `${id}SDK`, swagger.body);
-  } catch (e) {
-    if (e.status === 404) {
-      const instances = await platform.getInstances().run();
-      const validIds = instances.map(instance => instance.id).join(', ');
-      reportError(`instance ${id} not found, valid instances include ${validIds}`);
-    } else {
-      throw e;
-    }
+  const {baseUrl, authHeader} = await configurator(commander);
+  const result = await generateInstanceSdk(id, baseUrl, authHeader, commander.label);
+  if (!result.success) {
+    reportError(result.message);
   }
 }
 

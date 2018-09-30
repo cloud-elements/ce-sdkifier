@@ -1,9 +1,8 @@
 'use strict';
 
 const commander = require('commander');
-const swaggerer = require('../core/swaggerer');
-const {platformSDK} = require('../core/platformSDK');
 const configurator = require('../core/configurator');
+const {generateElementSdk} = require('../core/sdkifier')
 const {reportError, reportSuccess} = require('../core/utils');
 
 commander
@@ -27,34 +26,14 @@ if (!commander.user && commander.key) {
   reportError('You cannot specify an element key without also specifying a user');
 }
 
-const idOrKey = commander.id || commander.key;
-
 async function handleElementCommand() {
-  const platform = new platformSDK(...await configurator(commander));
-  let id = commander.id;
-  if (!id) {
-    const keys = await platform.getElementsKeys().run();
-    if (!keys.includes(commander.key)) {
-      reportError(`Invalid element key - ${commander.key}. Valid values include ${keys.join(', ')}`);
-      process.exit(1);
-    }
-    const element = await platform.get(`/elements/${commander.key}`);
-    id = element.body.id;
-  }
-  try {
-    const swagger = await platform.get(`/elements/${id}/docs`);
-    swaggerer(commander.label || `${idOrKey}SDK`, swagger.body);
-  } catch (e) {
-    if (e.status === 404) {
-      const elements = await platform.get('/elements');
-      const validIds = elements.body.map(element => element.id).join(', ');
-      reportError(`element ${id} not found, valid elements include ${validIds}`);
-    } else {
-      throw e;
-    }
+  const {baseUrl, authHeader} = await configurator(commander);
+  const result = await generateElementSdk(commander.key, commander.id, baseUrl, authHeader, commander.label);
+  if (!result.success) {
+    reportError(result.message);
   }
 }
 
 handleElementCommand()
-  .then(r => reportSuccess(`element ${idOrKey}`))
+  .then(r => reportSuccess(`element ${commander.id || commander.key}`))
   .catch(r => console.error(r));

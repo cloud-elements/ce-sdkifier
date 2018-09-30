@@ -1,9 +1,8 @@
 'use strict';
 
 const commander = require('commander');
-const swaggerer = require('../core/swaggerer');
-const {platformSDK} = require('../core/platformSDK');
 const configurator = require('../core/configurator');
+const {generatePlatformSdk} = require('../core/sdkifier')
 const {reportSuccess} = require('../core/utils');
 
 commander
@@ -13,9 +12,8 @@ commander
 commander.parse(process.argv);
 
 async function handlePlatformCommand() {
-  const platform = new platformSDK(...await configurator(commander));
-  const swagger = await platform.get('/docs/all_platform');
-  swaggerer(commander.label || 'platformSDK', swagger.body);
+  const {baseUrl, authHeader} = await configurator(commander);
+  generatePlatformSdk(baseUrl, authHeader, commander.label);
 }
 
 handlePlatformCommand()

@@ -1,9 +1,8 @@
 'use strict';
 
 const commander = require('commander');
-const swaggerer = require('../core/swaggerer');
-const {platformSDK} = require('../core/platformSDK');
 const configurator = require('../core/configurator');
+const {generateHubSdk} = require('../core/sdkifier')
 const {reportError, reportSuccess} = require('../core/utils');
 
 commander
@@ -20,14 +19,10 @@ if (commander.args.length === 0) {
 const hub = commander.args[0];
 
 async function handleHubCommand() {
-  const platform = new platformSDK(...await configurator(commander));
-  const hubs = await platform.getHubsKeys().run();
-  if (hubs.includes(hub)) {
-    const swagger = await platform.get(`/docs/${hub}`);
-    swaggerer(commander.label || `${hub}SDK`, swagger.body);
-  }
-  else {
-    reportError(`invalid hub-key.  Legal values are ${hubs.join(', ')}`);
+  const {baseUrl, authHeader} = await configurator(commander);
+  const result = await generateHubSdk(hub, baseUrl, authHeader, commander.label);
+  if (!result.success) {
+    reportError(result.message);
   }
 }
 

@@ -3,7 +3,7 @@ const {CodeGen} = require('../swagger-js-codegen/codegen');
 const path = require('path');
 const tsc = require('typescript');
 
-module.exports = (name, source) => {
+module.exports = (name, source, dir) => {
   const classTemplate = fs.readFileSync(path.resolve(__dirname, '../templates/typescript/class.mustache'), 'UTF-8');
   const methodTemplate = fs.readFileSync(path.resolve(__dirname, '../templates/typescript/method.mustache'), 'UTF-8');
   const typeTemplate = fs.readFileSync(path.resolve(__dirname, '../templates/typescript/type.mustache'), 'UTF-8');
@@ -23,13 +23,34 @@ module.exports = (name, source) => {
         dedashify:
           function() {
             return function(text, render) {
-              return render(text).replace(/-/g, '_');
+              return render(text).replace(/[-! <>/.,=':()&;]/g, '_');
             };
           },
         cleanMethodName:
           function() {
             return function(text, render) {
-              return render(text).replace(/:.*$/, '');
+              const identifier = render(text);
+              let match = identifier.match(/^(delete|get|update)([a-zA-Z]+)(ById|s)_([a-zA-Z]+)$/);
+              if (match) {
+                return `${match[1]}${match[4].charAt(0).toUpperCase()}${match[4].slice(1)}${match[3]}`
+              }
+              match = identifier.match(/^createObjectNameField_([a-zA-Z]+)$/);
+              if (match) {
+                return `create${match[1].charAt(0).toUpperCase()}${match[1].slice(1)}Field`
+              }
+              match = identifier.match(/^create([a-zA-Z]+)_([a-zA-Z]+)$/);
+              if (match) {
+                return `create${match[2].charAt(0).toUpperCase()}${match[2].slice(1)}`
+              }
+              match = identifier.match(/^getByObjectName_([a-zA-Z]+)$/);
+              if (match) {
+                return `get${match[1].charAt(0).toUpperCase()}${match[1].slice(1)}s`
+              }
+              match = identifier.match(/^(delete|get|update)ObjectNameByObjectId_([a-zA-Z]+)$/);
+              if (match) {
+                return `${match[1]}${match[2].charAt(0).toUpperCase()}${match[2].slice(1)}ById`
+              }
+              return identifier.replace(/:.*$/, '');
             };
           }
       }
@@ -43,6 +64,14 @@ module.exports = (name, source) => {
   for (let diagnostic of tsCompilerOutput.diagnostics) {
     console.log(diagnostic);
   }
-  fs.writeFileSync(`${name}.ts`, tsSourceCode);
-  fs.writeFileSync(`${name}.js`, tsCompilerOutput.outputText);
+  dir = dir ? dir + '/' : '';
+  fs.writeFileSync(`${dir}${name}.ts`, tsSourceCode);
+  fs.writeFileSync(`${dir}${name}.js`, tsCompilerOutput.outputText);
+  try {
+    require(`${process.cwd()}/${dir}${name}`);
+  } catch (e) {
+    console.log(e)
+    return {success:false, message: `Problem detected in generated code: ${e.message}`};
+  }
+  return {success: true};
 };
