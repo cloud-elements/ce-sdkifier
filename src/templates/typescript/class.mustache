@@ -17,7 +17,7 @@ protected _body: any;
 protected headers: any;
 protected queryParameters: any;
 protected form: any;
-constructor(public superThis: {{&className}}, protected method: string, protected path: string) {
+constructor(public superThis: {{&className}}, protected method: string, protected _path: string) {
 this.queryParameters = {};
 this.headers = {};
 this.form = {};
@@ -26,7 +26,7 @@ this.form = {};
 
 {{#methods}}
   class {{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}Parameters extends {{&className}}MethodParameters {
-  constructor(superThis: {{&className}}, method: string, path: string
+  constructor(superThis: {{&className}}, method: string, _path: string
   {{#parameters}}
     {{#excludeAuthorizationParameter}}
       {{#required}}
@@ -34,7 +34,7 @@ this.form = {};
       {{/required}}
     {{/excludeAuthorizationParameter}}
   {{/parameters}}
-  ) {super(superThis, method, path);
+  ) {super(superThis, method, _path);
   {{#parameters}}
     {{#excludeAuthorizationParameter}}
       {{#required}}
@@ -56,7 +56,7 @@ this.form = {};
     {{/isSingleton}}
   {{/isQueryParameter}}
   {{#isPathParameter}}
-    this.path = this.path.replace('{{=<% %>=}}{<%&name%>}', `${<%&camelCaseName%><%={{ }}=%>}`);
+    this._path = this._path.replace('{{=<% %>=}}{<%&name%>}', `${<%&camelCaseName%><%={{ }}=%>}`);
   {{/isPathParameter}}
   {{#isHeaderParameter}}
     {{#isSingleton}}
@@ -104,7 +104,7 @@ this.form = {};
           {{/isSingleton}}
         {{/isQueryParameter}}
         {{#isPathParameter}}
-          path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', `${parameters['{{&camelCaseName}}']}`);
+          _path = _path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', `${parameters['{{&camelCaseName}}']}`);
         {{/isPathParameter}}
         {{#isHeaderParameter}}
           {{#isSingleton}}
@@ -133,7 +133,7 @@ this.form = {};
     {{/excludeAuthorizationParameter}}
   {{/parameters}}
   run(): Promise < {{#tsType}}{{> type}}{{/tsType}} > {
-  return this.superThis.request(this.method, this.path, this._body, this.headers, this.queryParameters, this.form)
+  return this.superThis.request(this.method, this._path, this._body, this.headers, this.queryParameters, this.form)
   .then(r => r.body)
   }
   };
