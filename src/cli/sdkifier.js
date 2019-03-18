@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 'use strict';
-let commander = require('commander');
+const commander = require('commander');
+const pkg = require('../../package.json')
 
 commander
-    .version('0.1.0')
+    .version(pkg.version)
     .command('platform', 'creates a platform sdk')
     .command('hub', 'creates an sdk for a given hub')
     .command('element', 'creates an sdk for a given element')

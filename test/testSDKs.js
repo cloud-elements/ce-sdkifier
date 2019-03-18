@@ -7,10 +7,7 @@ const platform = new platformSDK('https://staging.cloud-elements.com', process.e
 
 async function doit() {
   let failedKeys = [];
-  const elements = await platform.get('/elements/47/metadata', null, null, {expand: false})
-  console.log(elements.body)
-  console.log(elements.body.filter(element => element.display_order > 0).length)
-  const keys = elements.body.map(element => element.key)
+  const keys = await platform.getElementsKeys()
   console.log(keys)
   for (let key of keys.sort()) {
     console.log(`Testing ${key}...`)

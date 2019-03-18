@@ -168,7 +168,11 @@ var getViewForSwagger2 = function(opts, type){
                 } else if(parameter.in === 'header'){
                     parameter.isHeaderParameter = true;
                 } else if(parameter.in === 'formData'){
-                    parameter.isFormParameter = true;
+                    if(parameter.type === 'file') {
+                        parameter.isFileParameter = true;
+                    } else {
+                      parameter.isFormParameter = true;
+                    }
                 }
                 parameter.tsType = ts.convertType(parameter);
                 parameter.cardinality = parameter.required ? '' : '?';
@@ -249,7 +253,11 @@ var getViewForSwagger1 = function(opts, type){
                 } else if(parameter.paramType === 'header'){
                     parameter.isHeaderParameter = true;
                 } else if(parameter.paramType === 'form'){
+                  if(parameter.type === 'file') {
+                    parameter.isFileParameter = true;
+                  } else {
                     parameter.isFormParameter = true;
+                  }
                 }
             });
             data.methods.push(method);
@@ -308,7 +316,7 @@ var getCode = function(opts, type) {
         });
     }
     if (opts.beautify === undefined || opts.beautify === true) {
-        return beautify(source, { indent_size: 4, max_preserve_newlines: 2 });
+        return beautify(source, { indent_size: 4, max_preserve_newlines: 1 });
     } else {
         return source;
     }

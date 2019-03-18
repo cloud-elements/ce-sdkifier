@@ -13,9 +13,9 @@ module.exports = async parms => {
   const password = await promptly.password('password: ');
   const platform = new platformSDK(baseUrl);
   try {
-    const bearerToken = await platform.post('/authentication',{username: parms.user, password: password});
-    const secrets = await platform.get('/authentication/secrets', null, {authorization: `Bearer ${bearerToken.body.token}`})
-    return {baseUrl, authHeader: `User ${secrets.body.userSecret}, Organization ${secrets.body.organizationSecret}`};
+    const bearerToken = await platform.post('/authentication').send({username: parms.user, password: password});
+    const secrets = await platform.get('/authentication/secrets').set('authorization', `Bearer ${bearerToken.token}`)
+    return {baseUrl, authHeader: `User ${secrets.userSecret}, Organization ${secrets.organizationSecret}`};
   } catch (e) {
     if (e.status === 401) {
       reportError('invalid username or password');

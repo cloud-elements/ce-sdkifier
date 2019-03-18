@@ -29,7 +29,9 @@ function convertType(swaggerType, swagger) {
     } else if (swaggerType.type === 'number' || swaggerType.type === 'integer') {
         typespec.tsType = 'number';
     } else if (swaggerType.type === 'boolean') {
-        typespec.tsType = 'boolean';
+      typespec.tsType = 'boolean';
+    } else if (swaggerType.type === 'file') {
+      typespec.tsType = 'file';
     } else if (swaggerType.type === 'array') {
         typespec.tsType = 'array';
         typespec.elementType = convertType(swaggerType.items);
@@ -79,6 +81,7 @@ function convertType(swaggerType, swagger) {
     typespec.isRef = typespec.tsType === 'ref';
     typespec.isObject = typespec.tsType === 'object';
     typespec.isArray = typespec.tsType === 'array';
+    typespec.isFile = typespec.tsType === 'file';
     typespec.isAtomic = typespec.isAtomic || _.includes(['string', 'number', 'boolean', 'any'], typespec.tsType);
 
     return typespec;

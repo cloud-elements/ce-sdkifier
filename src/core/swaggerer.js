@@ -1,4 +1,5 @@
 const fs = require('fs');
+const pluralize = require('pluralize')
 const {CodeGen} = require('../swagger-js-codegen/codegen');
 const path = require('path');
 const tsc = require('typescript');
@@ -32,23 +33,23 @@ module.exports = (name, source, dir) => {
               const identifier = render(text);
               let match = identifier.match(/^(delete|get|update)([a-zA-Z]+)(ById|s)_([a-zA-Z]+)$/);
               if (match) {
-                return `${match[1]}${match[4].charAt(0).toUpperCase()}${match[4].slice(1)}${match[3]}`
+                return `${match[1]}${match[4].charAt(0).toUpperCase()}${pluralize.singular(match[4].slice(1))}${match[3]}`
               }
               match = identifier.match(/^createObjectNameField_([a-zA-Z]+)$/);
               if (match) {
-                return `create${match[1].charAt(0).toUpperCase()}${match[1].slice(1)}Field`
+                return `create${match[1].charAt(0).toUpperCase()}${pluralize.plural(match[1].slice(1))}Field`
               }
               match = identifier.match(/^create([a-zA-Z]+)_([a-zA-Z]+)$/);
               if (match) {
-                return `create${match[2].charAt(0).toUpperCase()}${match[2].slice(1)}`
+                return `create${match[2].charAt(0).toUpperCase()}${pluralize.singular(match[2].slice(1))}`
               }
               match = identifier.match(/^getByObjectName_([a-zA-Z]+)$/);
               if (match) {
-                return `get${match[1].charAt(0).toUpperCase()}${match[1].slice(1)}s`
+                return `get${match[1].charAt(0).toUpperCase()}${pluralize.plural(match[1].slice(1))}`
               }
               match = identifier.match(/^(delete|get|update)ObjectNameByObjectId_([a-zA-Z]+)$/);
               if (match) {
-                return `${match[1]}${match[2].charAt(0).toUpperCase()}${match[2].slice(1)}ById`
+                return `${match[1]}${match[2].charAt(0).toUpperCase()}${pluralize.singular(match[2].slice(1))}ById`
               }
               return identifier.replace(/:.*$/, '');
             };

@@ -1,6 +1,6 @@
 const {shopifySDK} = require('./shopifySDK');
 
-const shopify = new shopifySDK('staging.cloud-elements.com', process.env.SHOPIFY_AUTH_HEADER);
+const shopify = new shopifySDK('https://staging.cloud-elements.com', process.env.SHOPIFY_AUTH_HEADER);
 
 async function doit() {
   const products = await
@@ -8,7 +8,6 @@ async function doit() {
       .getProducts()
       .where(`created_at_max='2015-01-01T00:00:00-06:00'`)
       .pageSize(3)
-      .run()
   for (let product of products) {
     console.log({
       name: product.handle,

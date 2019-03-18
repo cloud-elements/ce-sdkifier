@@ -1,6 +1,6 @@
 {
   "name": "ce-sdkifier",
-  "version": "0.9.5",
+  "version": "0.10.1",
   "description": "A command line utility for generating Javascript and Typescript SDKs for Cloud Elements",
   "main": "src/core/sdkifier.js",
   "scripts": {
@@ -30,8 +30,9 @@
     "commander": "^2.15.1",
     "js-beautify": "^1.5.1",
     "jshint": "^2.9.6",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "mustache": "2.2.1",
+    "pluralize": "^7.0.0",
     "promptly": "^3.0.3",
     "superagent": "^3.8.2",
     "typescript": "^3.0.1"

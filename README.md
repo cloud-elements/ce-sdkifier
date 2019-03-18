@@ -63,9 +63,15 @@ The constructor requires the base URL (i.e., `https://api.cloud-elements.com`), 
 All methods follow a standard pattern.  The name of the method uses the `operationId` from our
 [OpenAPI 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) 
 documentation (AKA Swagger).  This is typically `get`, `create`, `update`, `replace`, or `delete` followed
-by the name of the resource.  The parameters to this call will be all of the required parameters for the operation.  The methods use chaining for specifying any optional parameters, followed by a call to `run()`
+by the name of the resource.  The parameters to this call will be all of the required parameters for the operation.  The methods use chaining for specifying any optional parameters
 (see below for an example).  Each method will return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) containing either the body of the
 response when successful or the response itself when it fails.
+
+The generated methods return extended [superagent](https://visionmedia.github.io/superagent/) instances that have the
+ authorization header and URL already set.  They are also extended to include methods for every documented optional 
+ parameter.  All standard `superagent` methods are also supported.  This allows you to provide, for example, any 
+ undocumented headers or query parameters.  It also allows you to take advantage of other `superagent` capabilities,
+ such as `retry()`.
 
 
 You can also get low level access to the API via the `get`, `post`, `put`, `patch`, and `delete`
@@ -86,7 +92,6 @@ async function doit() {
       .getProducts()
       .where(`created_at_max='2015-01-01T00:00:00-06:00'`)
       .pageSize(3)
-      .run()
   for (let product of products) {
     console.log({
       name: product.handle,

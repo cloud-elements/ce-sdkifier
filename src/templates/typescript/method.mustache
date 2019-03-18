@@ -13,6 +13,7 @@
     {{/required}}
     {{/excludeAuthorizationParameter}}
 {{/parameters}}
+* @return { {{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}Parameters } To allow chaining
 */
 {{#cleanMethodName}}{{&methodName}}{{/cleanMethodName}}(
 {{#parameters}}{{#excludeAuthorizationParameter}}{{#required}}{{^isSingleton}}{{&camelCaseName}}: {{> type}},
